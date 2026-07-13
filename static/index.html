@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>탈주컴퍼니봇</title>
+  <style>
+    body { font-family: sans-serif; max-width: 600px; margin: 40px auto; }
+    #chatbox { border: 1px solid #ccc; height: 400px; overflow-y: auto; padding: 10px; margin-bottom: 10px; }
+    .user { color: blue; margin: 5px 0; }
+    .bot { color: green; margin: 5px 0; }
+    input { width: 80%; padding: 8px; }
+    button { padding: 8px 16px; }
+  </style>
+</head>
+<body>
+  <h2>탈주컴퍼니봇 🧭</h2>
+  <div id="chatbox"></div>
+  <input type="text" id="userInput" placeholder="질문을 입력하세요">
+  <button onclick="sendMessage()">전송</button>
+
+  <script>
+    async function sendMessage() {
+      const input = document.getElementById("userInput");
+      const message = input.value;
+      if (!message) return;
+
+      const chatbox = document.getElementById("chatbox");
+      chatbox.innerHTML += `<div class="user">나: ${message}</div>`;
+      input.value = "";
+
+      // TODO: fetch로 /chat 엔드포인트에 POST 요청 보내기
+      // 힌트: body는 JSON.stringify({message: message})
+      // 힌트: 응답 받으면 chatbox.innerHTML += `<div class="bot">봇: ${응답텍스트}</div>`
+      fetch("/chat", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},  // 데이터 형식
+        body: JSON.stringify({ message: message })      // 문자열로 변환
+      })
+      .then(response => response.json())    // 응답을 JSON으로 변환
+      .then(data => {
+        // TODO: 여기서 data 안에 우리가 원하는 답변 텍스트가 어떤 이름으로 들어있을지 생각해보세요.
+        // 힌트: Python 쪽 /chat 엔드포인트가 return {"reply": ...} 형태로 응답했었죠?
+        // chatbox.innerHTML += `<div class="bot">봇: ${??}</div>`;
+        chatbox.innerHTML += `<div class="bot">봇: ${data.reply}</div>`;
+      })
+    }
+  </script>
+</body>
+</html>
