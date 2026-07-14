@@ -25,15 +25,28 @@ class ChatRequest(BaseModel):
 
 @app.post("/chat")
 def chat(request: ChatRequest):
-    # TODO 1: request.message를 가져와서
+    # request.message를 가져와서
     quiz = request.message
     
-    # TODO: Groq의 chat.completions.create()를 호출해보세요.
-    # 힌트: OpenAI 스타일이라 messages=[{"role": "user", "content": ...}] 형태
-    # model 이름은 "llama-3.3-70b-versatile"
+    # Groq의 chat.completions.create() 호출
     completion = client.chat.completions.create(
         model="llama-3.3-70b-versatile",
         messages=[
+            {"role": "system", "content": """
+                - 너는 탈주컴퍼니에서 회사의 규정을 알려주는 챗봇이다.
+                - 모르는 정보는 반드시 모른다고 답한다.
+                  절대 그럴 듯한 답변을 하지 않는다.
+                - 너는 회사 내부 문서에 접근할 권한이 없다. 사내 규정에 대한 구체적 수치나 조항은 절대 답하지 마라
+                - 답변 톤은 질문답변톤을 장착한다.
+                - 대부분은 100자 이내로 간결하게 답하며, 최대 200자까지 허용한다.
+                - 한자나 외국어, 마크다운 문법은 제거한다
+                  한국어로만 답한다.
+                - 줄글보단, 읽기 좋게 정리해서 답변한다.
+             """},
+            {"role": "user", "content": "연차가 며칠이야?"},
+            {"role": "assistant", "content": "연차 횟수에 대한 구체적인 정보는 모릅니다. 관련된 사항은 인사팀에 문의하세요."},
+            {"role": "user", "content": "점심메뉴 추천해줘"},
+            {"role": "assistant", "content": "사내 규정과 무관한 질문입니다."},
             {"role": "user", "content": quiz}
         ]
     )
