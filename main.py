@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 from pydantic import BaseModel      # 요청 데이터 포맷 정의
 from groq import Groq               # Groq API 라이브러리
 import os
+from rag_utils import build_rag_prompt
 
 # .env 파일의 환경 변수를 시스템에 로드
 load_dotenv()
@@ -23,35 +24,34 @@ client = Groq(api_key=GEMINI_API_KEY)
 class ChatRequest(BaseModel):
     message: str  # 사용자가 입력한 질문
 
+# 히스토리
+conversation_history = []
+
 @app.post("/chat")
 def chat(request: ChatRequest):
     # request.message를 가져와서
     quiz = request.message
     
+    # TODO 1: RAG 컨텍스트만 따로 만들기
+    context = build_rag_prompt(quiz)
+
+    # TODO 2: system 메시지 + 히스토리 + user_message 합쳐서 messages 구성
+    messages = [
+    {"role": "system", "content": "너는 사내 챗봇이다. 참고자료를 바탕으로 답하고, 모르면 모른다고 답하라."}
+    ] + conversation_history + [{"role": "user", "content": context}]
+    
     # Groq의 chat.completions.create() 호출
     completion = client.chat.completions.create(
         model="llama-3.3-70b-versatile",
-        messages=[
-            {"role": "system", "content": """
-                - 너는 탈주컴퍼니에서 회사의 규정을 알려주는 챗봇이다.
-                - 모르는 정보는 반드시 모른다고 답한다.
-                  절대 그럴 듯한 답변을 하지 않는다.
-                - 너는 회사 내부 문서에 접근할 권한이 없다. 사내 규정에 대한 구체적 수치나 조항은 절대 답하지 마라
-                - 답변 톤은 질문답변톤을 장착한다.
-                - 대부분은 100자 이내로 간결하게 답하며, 최대 200자까지 허용한다.
-                - 한자나 외국어, 마크다운 문법은 제거한다
-                  한국어로만 답한다.
-                - 줄글보단, 읽기 좋게 정리해서 답변한다.
-             """},
-            {"role": "user", "content": "연차가 며칠이야?"},
-            {"role": "assistant", "content": "연차 횟수에 대한 구체적인 정보는 모릅니다. 관련된 사항은 인사팀에 문의하세요."},
-            {"role": "user", "content": "점심메뉴 추천해줘"},
-            {"role": "assistant", "content": "사내 규정과 무관한 질문입니다."},
-            {"role": "user", "content": quiz}
-        ]
+        messages=messages
     )
+    reply = completion.choices[0].message.content
 
-    return {"reply": completion.choices[0].message.content}     # FastAPI는 딕셔너리 리턴을 자동으로 JSON문자열로 바꿈
+    # TODO 3: 히스토리 업데이트
+    conversation_history.append({"role": "user", "content": quiz})
+    conversation_history.append({"role": "assistant", "content": reply})
+
+    return {"reply": reply}
 
 from fastapi.staticfiles import StaticFiles     # static 폴더 안에 있는 정적 파일들을 웹 브라우저에 통째로 배포
 app.mount("/", StaticFiles(directory="static", html=True), name="static") 
