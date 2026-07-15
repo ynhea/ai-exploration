@@ -93,7 +93,7 @@ CompassBot/
 |------|------|------|
 | Day1 | FastAPI + LLM API 챗봇 MVP | ✅ |
 | Day2 | Prompt Engineering | ✅ |
-| Day3 | RAG 구축 | ⏳ 예정 |
+| Day3 | RAG 구축 | ✅ |
 | Day4 | 성능 최적화 | ⏳ 예정 |
 | Day5 | AI Agent | ⏳ 예정 |
 | Day6 | MCP 연동 | ⏳ 예정 |
@@ -130,7 +130,7 @@ CompassBot/
 
 - ✅ Day1 - 챗봇 MVP 구축
 - ✅ Day2 - 프롬프트 엔지니어링
-- ⏳ Day3
+- ✅ Day3 - RAG
 - ⏳ Day4
 - ⏳ Day5
 - ⏳ Day6
