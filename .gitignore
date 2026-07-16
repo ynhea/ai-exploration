@@ -1,4 +1,7 @@
+chroma_db/
 .env
 venv/
 __pycache__/
 *.pyc
+cache.json
+*.jsonl

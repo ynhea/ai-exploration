@@ -41,26 +41,21 @@ def add_documents_to_db(doc_filenames: list[str]):
     chunk로 나누고, embedding해서 ChromaDB에 저장한다.
     """
     for filename in doc_filenames:
-        # TODO 1: 파일 읽기
+        # 파일 읽기
         with open(filename, "r", encoding="utf-8") as f:
             text = f.read()
-        # TODO 2: split_into_chunks로 chunk 나누기
-        chunks = split_into_chunks(text, chunk_size=100, overlap=50)
-        # TODO 3: 각 chunk를 embedding_model.encode(chunk)로 벡터화
+        # split_into_chunks로 chunk 나누기
+        chunks = split_into_chunks(text, chunk_size=300, overlap=50)
+        # 각 chunk를 embedding_model.encode(chunk)로 벡터화
         vectors = embedding_model.encode(chunks)
-        # TODO 4: collection.add(...)로 저장
-        #   힌트: collection.add()는 ids, embeddings, documents, metadatas를 키워드 인자로 받습니다.
-        #   ids: 각 chunk의 고유 id (예: "휴가정책_0", "휴가정책_1"...)
-        #   embeddings: 벡터 리스트
-        #   documents: chunk 원문 텍스트 리스트
-        #   metadatas: [{"source": filename}, ...] 같은 부가정보
+        # collection.add(...)로 저장
         ids = [f"{filename}_{i}" for i in range(len(chunks))]
         metadatas = [{"source": filename} for i in range(len(chunks))]
         collection.add(ids=ids, embeddings=vectors, documents=chunks, metadatas=metadatas)
     return
 
 # 검색 함수
-def search_similar_chunks(question: str, top_k: int = 3):
+def search_similar_chunks(question: str, top_k: int):
     """
     question을 embedding해서 ChromaDB에서 가장 유사한 chunk를 top_k개 찾아 반환한다.
     """
@@ -79,7 +74,7 @@ def search_similar_chunks(question: str, top_k: int = 3):
 
 
 # RAG - 프롬프트 연결
-def build_rag_prompt(question: str, top_k: int = 3) -> str:
+def build_rag_prompt(question: str, top_k: int) -> str:
     # 질문에 대해 관련 chunk를 검색하고, 하나의 문자열로 합쳐서 반환
     results = search_similar_chunks(question, top_k=top_k)
     context = "\n\n---\n\n".join(results["documents"][0])
