@@ -95,7 +95,7 @@ CompassBot/
 | Day2 | Prompt Engineering | ✅ |
 | Day3 | RAG 구축 | ✅ |
 | Day4 | 성능 최적화 | ✅ |
-| Day5 | AI Agent | ⏳ 예정 |
+| Day5 | AI Agent | ✅ |
 | Day6 | MCP 연동 | ⏳ 예정 |
 | Day7 | Docker 배포 및 프로젝트 정리 | ⏳ 예정 |
 
@@ -132,7 +132,7 @@ CompassBot/
 - ✅ Day2 - 프롬프트 엔지니어링
 - ✅ Day3 - RAG
 - ✅ Day4 - 캐싱 & 로그 & 테스트
-- ⏳ Day5
+- ✅ Day5 - AI Agent
 - ⏳ Day6
 - ⏳ Day7
 
