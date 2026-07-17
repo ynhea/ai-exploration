@@ -54,17 +54,16 @@ def add_documents_to_db(doc_filenames: list[str]):
         collection.add(ids=ids, embeddings=vectors, documents=chunks, metadatas=metadatas)
     return
 
+
 # 검색 함수
 def search_similar_chunks(question: str, top_k: int):
     """
     question을 embedding해서 ChromaDB에서 가장 유사한 chunk를 top_k개 찾아 반환한다.
     """
-    # TODO 1: question을 벡터화
-    # 힌트: encode()는 리스트를 넣으면 리스트의 벡터들을 반환하니, 질문 하나만 넣어도 [question] 처럼 리스트로 감싸는 게 안전합니다.
+    # question을 벡터화
     question_vector = embedding_model.encode([question])
 
-    # TODO 2: collection.query()로 검색
-    # 힌트: collection.query(query_embeddings=..., n_results=top_k) 형태
+    # collection.query()로 검색
     results = collection.query(
         query_embeddings=question_vector,
         n_results=top_k
@@ -79,7 +78,7 @@ def build_rag_prompt(question: str, top_k: int) -> str:
     results = search_similar_chunks(question, top_k=top_k)
     context = "\n\n---\n\n".join(results["documents"][0])
     
-    # TODO 2: context와 question을 합쳐 최종 프롬프트 만들기
+    # context와 question을 합쳐 최종 프롬프트 만들기
     prompt = f"""
         다음은 사내 문서에서 검색된 참고 자료입니다:
         ---

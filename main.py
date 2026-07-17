@@ -6,7 +6,7 @@ from log_utils import log_usage
 
 # FastAPI 객체 생성
 app = FastAPI()
-TOP_K = 3
+TOP_K = 5
 
 from llm_client import client
 
