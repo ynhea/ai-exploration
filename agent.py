@@ -109,9 +109,7 @@ def run_agent(user_question: str, max_iterations: int = 5):
             messages.append({"role": "tool", "tool_call_id": tool_call.id, "name": function_name, "content": str(function_response)})
     # 여기서 루프가 다시 돌면서, 방금 추가된 tool 결과를 포함해 다시 LLM 호출됨
 
-    # TODO: for 루프가 max_iterations만큼 다 돌았는데도 break를 못 만난 경우
-    #   (도구를 계속 요청하기만 하고 최종 답변을 안 낸 상황) → 어떻게 처리할지 생각해보기
-    #   힌트: "지금까지 알아낸 정보만으로 최종 답을 내라"는 메시지를 강제로 붙여서 tools 없이 한 번 더 호출
+    # for 루프가 max_iterations만큼 다 돌았는데도 break를 못 만난 경우
     messages.append({"role": "system", "content": "지금까지 알아낸 정보만으로 최종 답을 내라"})
     second_response = client.chat.completions.create(
         model="llama-3.3-70b-versatile",
