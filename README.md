@@ -97,7 +97,7 @@ CompassBot/
 | Day4 | 성능 최적화 | ✅ |
 | Day5 | AI Agent | ✅ |
 | Day6 | MCP 연동 | ✅ |
-| Day7 | Docker 배포 및 프로젝트 정리 | ⏳ 예정 |
+| Day7 | Docker 배포 및 프로젝트 정리 | ✅ |
 
 ---
 
@@ -134,7 +134,7 @@ CompassBot/
 - ✅ Day4 - 캐싱 & 로그 & 테스트
 - ✅ Day5 - AI Agent
 - ✅ Day6 - MCP 연동
-- ⏳ Day7
+- ✅ Day7
 
 ---
 
